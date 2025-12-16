@@ -1,0 +1,85 @@
+<!-- sitio_web/templates/sitio_web/home.html -->
+
+{% extends 'sitio_web/base.html' %}
+
+{% block title %}Inicio - CCR CONSULTORES{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="row align-items-center my-5">
+        <div class="col-lg-6">
+            <h1 class="display-4 fw-bold mb-3">
+                <i class="bi bi-building text-primary"></i>
+                Bienvenido a CCR CONSULTORES
+            </h1>
+            <p class="lead mb-4">
+                Somos una empresa líder en gestión integral de proyectos de construcción. 
+                Ofrecemos soluciones innovadoras, control administrativo y comunicación directa con nuestros clientes.
+            </p>
+            <a href="{% url 'login' %}" class="btn btn-primary btn-lg me-2">
+                <i class="bi bi-box-arrow-in-right"></i> Acceder al Sistema
+            </a>
+        </div>
+        <div class="col-lg-6 text-center">
+            <i class="bi bi-building" style="font-size: 15rem; color: #ff6b35; opacity: 0.2;"></i>
+        </div>
+    </div>
+
+    <!-- Servicios -->
+    <div class="row my-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="fw-bold">Nuestros Servicios</h2>
+            <p class="text-muted">Soluciones integrales para la gestión de proyectos de construcción</p>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <i class="bi bi-clipboard-check" style="font-size: 3rem; color: #ff6b35;"></i>
+                    <h5 class="card-title mt-3">Gestión de Proyectos</h5>
+                    <p class="card-text">
+                        Control total del avance de tus proyectos con actualizaciones en tiempo real.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <i class="bi bi-shield-lock" style="font-size: 3rem; color: #004e89;"></i>
+                    <h5 class="card-title mt-3">Seguridad de Datos</h5>
+                    <p class="card-text">
+                        Protección avanzada de la información con sistemas de seguridad robustos.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <i class="bi bi-chat-dots" style="font-size: 3rem; color: #28a745;"></i>
+                    <h5 class="card-title mt-3">Comunicación Directa</h5>
+                    <p class="card-text">
+                        Sistema de mensajería integrado para comunicación fluida con tu equipo.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="row my-5">
+        <div class="col-12">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center py-5">
+                    <h3 class="fw-bold mb-3">¿Listo para gestionar tus proyectos?</h3>
+                    <p class="lead mb-4">Accede a nuestro sistema y mantén el control total de tus obras.</p>
+                    <a href="{% url 'login' %}" class="btn btn-light btn-lg">
+                        <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

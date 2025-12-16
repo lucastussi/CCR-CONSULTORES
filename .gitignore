@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python/
+env/
+venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Django
+*.log
+*.pot
+*.mo
+*.po
+db.sqlite3
+media/
+static_root/
+local_settings.py
+
+# IDEs
+.idea/
+.vscode/
+
+# OS generated files
+.DS_Store
+.Trashes
+Thumbs.db

@@ -1,0 +1,75 @@
+<!-- sitio_web/templates/sitio_web/worker_add_update.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar avance - {{ company_name }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f3f4f6; margin: 0; }
+        header { background-color: #1f2937; color: #f9fafb; padding: 1rem 2rem; }
+        header h1 { margin: 0; font-size: 1.4rem; }
+        nav a { color: #f9fafb; margin-right: 1rem; text-decoration: none; font-size: 0.9rem; }
+        main { padding: 2rem; max-width: 600px; margin: 0 auto; }
+        h2 { color: #111827; }
+        form {
+            background-color: #ffffff;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        label { display: block; margin-top: 1rem; font-size: 0.9rem; color: #374151; }
+        input[type="number"],
+        textarea,
+        input[type="file"] {
+            width: 100%;
+            margin-top: 0.25rem;
+            padding: 0.4rem;
+            border-radius: 0.375rem;
+            border: 1px solid #d1d5db;
+            font-size: 0.9rem;
+        }
+        button {
+            margin-top: 1.5rem;
+            width: 100%;
+            padding: 0.6rem;
+            border: none;
+            border-radius: 0.375rem;
+            background-color: #2563eb;
+            color: #ffffff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        button:hover { background-color: #1d4ed8; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>{{ company_name }} - Registrar avance</h1>
+        <nav>
+            <a href="{% url 'worker_project_detail' project.id %}">Volver al proyecto</a>
+            <a href="{% url 'dashboard' %}">Panel</a>
+            <a href="{% url 'logout' %}">Cerrar sesión</a>
+        </nav>
+    </header>
+    <main>
+        <h2>Proyecto: {{ project.name }}</h2>
+        <p><strong>Progreso actual:</strong> {{ project.progress_percent }} %</p>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <label for="id_progress_percent">Nuevo porcentaje de avance</label>
+            {{ form.progress_percent }}
+
+            <label for="id_comment">Comentario (opcional)</label>
+            {{ form.comment }}
+
+            <label for="id_image">Imagen del avance (opcional)</label>
+            {{ form.image }}
+
+            <button type="submit">Guardar actualización</button>
+        </form>
+    </main>
+</body>
+</html>
