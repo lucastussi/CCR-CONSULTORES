@@ -1,0 +1,73 @@
+{% extends 'sitio_web/base.html' %}
+
+{% block title %}{{ page_title }} - {{ company_name }}{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h1 class="mb-4">
+        <i class="bi bi-folder2-open"></i>
+        Documentos del proyecto: "{{ project.name }}"
+    </h1>
+
+    <div class="mb-3">
+        <a href="{% url 'staff_upload_document' project.id %}" class="btn btn-primary">
+            <i class="bi bi-upload"></i> Subir nuevo documento
+        </a>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left-circle"></i> Volver al dashboard
+        </a>
+    </div>
+
+    {% if documents %}
+        <div class="card">
+            <div class="card-header bg-light">
+                <strong>Listado de documentos</strong>
+            </div>
+            <div class="card-body p-0">
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Archivo</th>
+                            <th>Visible para cliente</th>
+                            <th>Subido por</th>
+                            <th>Fecha de subida</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for doc in documents %}
+                            <tr>
+                                <td>{{ doc.title }}</td>
+                                <td>
+                                    <a href="{{ doc.file.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-file-earmark"></i> Ver / Descargar
+                                    </a>
+                                </td>
+                                <td>
+                                    {% if doc.visible_to_client %}
+                                        <span class="badge bg-success">Sí</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">No</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if doc.uploaded_by %}
+                                        {{ doc.uploaded_by.username }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>{{ doc.uploaded_at|date:"d/m/Y H:i" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            No hay documentos registrados para este proyecto.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

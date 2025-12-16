@@ -1,7 +1,7 @@
 # sitio_web/forms.py
 
 from django import forms
-from .models import ProjectUpdate, Message
+from .models import ProjectUpdate, Message, Document
 
 
 class ProjectUpdateForm(forms.ModelForm):
@@ -41,6 +41,7 @@ class MessageForm(forms.ModelForm):
             'body': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Escribe tu mensaje aquí...'}),
         }
 
+
 class MessageReplyForm(forms.ModelForm):
     """
     Formulario simple para responder a un mensaje existente (solo cuerpo).
@@ -53,4 +54,16 @@ class MessageReplyForm(forms.ModelForm):
                 'rows': 4,
                 'placeholder': 'Escribe tu respuesta al cliente aquí...'
             }),
+        }
+
+
+class DocumentForm(forms.ModelForm):
+    """
+    Formulario para que el staff (ADMIN/WORKER) suba documentos de proyecto.
+    """
+    class Meta:
+        model = Document
+        fields = ['title', 'file', 'visible_to_client']
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'Nombre del documento'}),
         }

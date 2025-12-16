@@ -1,0 +1,44 @@
+{% extends 'sitio_web/base.html' %}
+
+{% block title %}{{ page_title }} - {{ company_name }}{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h1 class="mb-4">
+        <i class="bi bi-upload"></i>
+        Subir documento para: "{{ project.name }}"
+    </h1>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label class="form-label">Título</label>
+                    {{ form.title }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Archivo</label>
+                    {{ form.file }}
+                </div>
+
+                <div class="form-check mb-3">
+                    {{ form.visible_to_client }}
+                    <label class="form-check-label">
+                        ¿Visible para el cliente?
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle"></i> Guardar documento
+                </button>
+                <a href="{% url 'staff_project_documents' project.id %}" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Cancelar
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,92 +1,24 @@
-<!-- sitio_web/templates/sitio_web/dashboard_worker.html -->
-
 {% extends 'sitio_web/base.html' %}
 
-{% block title %}Panel de Trabajador{% endblock %}
+{% block title %}Dashboard Trabajador - {{ company_name }}{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="row mb-4">
-        <div class="col-12">
-            <h1 class="fw-bold">
-                <i class="bi bi-person-workspace"></i> 
-                Panel de Trabajador
-            </h1>
-            <p class="lead text-muted">Bienvenido, {{ request.user.username }}</p>
-        </div>
+<div class="container my-4">
+    <h1 class="mb-4">
+        <i class="bi bi-tools"></i>
+        Panel de Trabajador
+    </h1>
+
+    <div class="alert alert-info">
+        <strong>Bienvenido, {{ request.user.username }}!</strong>
+        <br>
+        Aquí puedes ver los proyectos asignados a ti y registrar avances.
     </div>
 
-    <!-- Resumen de estadísticas -->
-    <div class="row mb-4">
-        <div class="col-md-4 mb-3">
-            <div class="card text-center bg-primary text-white">
-                <div class="card-body">
-                    <i class="bi bi-folder" style="font-size: 2.5rem;"></i>
-                    <h3 class="mt-2">{{ projects|length }}</h3>
-                    <p class="mb-0">Proyectos Asignados</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="card text-center bg-success text-white">
-                <div class="card-body">
-                    <i class="bi bi-check-circle" style="font-size: 2.5rem;"></i>
-                    <h3 class="mt-2">{{ projects|length }}</h3>
-                    <p class="mb-0">Proyectos Activos</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="card text-center bg-info text-white">
-                <div class="card-body">
-                    <i class="bi bi-envelope" style="font-size: 2.5rem;"></i>
-                    <h3 class="mt-2">
-                        <a href="{% url 'staff_inbox' %}" class="text-white text-decoration-none">Ver</a>
-                    </h3>
-                    <p class="mb-0">Mensajes</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Accesos rápidos -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <h3 class="fw-bold mb-3">
-                <i class="bi bi-lightning"></i> Accesos Rápidos
-            </h3>
-        </div>
-        <div class="col-md-6 mb-3">
-            <div class="card">
-                <div class="card-body text-center">
-                    <i class="bi bi-clipboard-check" style="font-size: 3rem; color: #ff6b35;"></i>
-                    <h5 class="card-title mt-3">Registrar Avances</h5>
-                    <p class="card-text">Actualiza el progreso de tus proyectos asignados.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 mb-3">
-            <div class="card">
-                <div class="card-body text-center">
-                    <i class="bi bi-envelope-open" style="font-size: 3rem; color: #28a745;"></i>
-                    <h5 class="card-title mt-3">Ver Mensajes</h5>
-                    <p class="card-text">Revisa y responde mensajes de clientes.</p>
-                    <a href="{% url 'staff_inbox' %}" class="btn btn-success">
-                        <i class="bi bi-envelope"></i> Ver Mensajes
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Lista de proyectos asignados -->
-    <div class="row">
-        <div class="col-12">
-            <h3 class="fw-bold mb-3">
-                <i class="bi bi-folder-open"></i> Mis Proyectos Asignados
-            </h3>
-        </div>
-    </div>
+    <h2 class="mt-4 mb-3">
+        <i class="bi bi-briefcase"></i>
+        Mis proyectos asignados
+    </h2>
 
     {% if projects %}
         <div class="row">
@@ -94,45 +26,53 @@
                 <div class="col-md-6 col-lg-4 mb-4">
                     <div class="card h-100">
                         <div class="card-body">
-                            <h5 class="card-title">
-                                <i class="bi bi-building"></i> {{ project.name }}
-                            </h5>
-                            <p class="card-text text-muted">{{ project.description|truncatewords:15 }}</p>
-                            <p class="mb-2">
-                                <strong><i class="bi bi-geo-alt"></i> Ubicación:</strong> 
-                                {{ project.address }}, {{ project.city }}
+                            <h5 class="card-title">{{ project.name }}</h5>
+                            <p class="card-text text-muted">
+                                <small>
+                                    <i class="bi bi-geo-alt"></i> {{ project.city }}
+                                </small>
                             </p>
-                            <p class="mb-2">
-                                <strong><i class="bi bi-person"></i> Cliente:</strong>
+                            <p class="card-text">
+                                <strong>Cliente:</strong>
                                 {% if project.client %}
                                     {{ project.client.username }}
                                 {% else %}
-                                    <em>No asignado</em>
+                                    Sin asignar
                                 {% endif %}
                             </p>
-                            <p class="mb-2">
-                                <strong>Estado:</strong> 
-                                <span class="badge bg-info">{{ project.get_status_display }}</span>
+                            <p class="card-text">
+                                <strong>Estado:</strong>
+                                <span class="badge 
+                                    {% if project.status == 'EN_PROGRESO' %}bg-primary
+                                    {% elif project.status == 'COMPLETADO' %}bg-success
+                                    {% elif project.status == 'PAUSADO' %}bg-warning
+                                    {% elif project.status == 'CANCELADO' %}bg-danger
+                                    {% else %}bg-secondary{% endif %}">
+                                    {{ project.get_status_display }}
+                                </span>
                             </p>
-                            <p class="mb-3">
-                                <strong>Avance:</strong> 
-                                <span class="badge bg-success">{{ project.progress_percent }}%</span>
-                            </p>
-                            <div class="progress mb-3" style="height: 20px;">
-                                <div class="progress-bar" role="progressbar" 
-                                     style="width: {{ project.progress_percent }}%;" 
-                                     aria-valuenow="{{ project.progress_percent }}" 
-                                     aria-valuemin="0" aria-valuemax="100">
-                                    {{ project.progress_percent }}%
+                            <div class="mb-3">
+                                <strong>Avance:</strong>
+                                <div class="progress" style="height: 25px;">
+                                    <div class="progress-bar" role="progressbar" 
+                                         style="width: {{ project.progress_percent }}%;" 
+                                         aria-valuenow="{{ project.progress_percent }}" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="100">
+                                        {{ project.progress_percent }}%
+                                    </div>
                                 </div>
                             </div>
-                            <a href="{% url 'worker_project_detail' project.id %}" 
-                               class="btn btn-sm btn-primary me-2">
-                                <i class="bi bi-eye"></i> Ver Detalles
+                        </div>
+                        <div class="card-footer bg-light">
+                            <a href="{% url 'worker_project_detail' project.id %}" class="btn btn-sm btn-primary">
+                                <i class="bi bi-eye"></i> Ver detalles
                             </a>
-                            <a href="{% url 'worker_add_update' project.id %}" 
-                               class="btn btn-sm btn-success">
-                                <i class="bi bi-plus-circle"></i> Registrar Avance
+                            <a href="{% url 'worker_add_update' project.id %}" class="btn btn-sm btn-success">
+                                <i class="bi bi-plus-circle"></i> Registrar avance
+                            </a>
+                            <a href="{% url 'staff_project_documents' project.id %}" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-folder2-open"></i> Documentos
                             </a>
                         </div>
                     </div>
@@ -140,8 +80,8 @@
             {% endfor %}
         </div>
     {% else %}
-        <div class="alert alert-info" role="alert">
-            <i class="bi bi-info-circle"></i> No tienes proyectos asignados en este momento.
+        <div class="alert alert-warning">
+            No tienes proyectos asignados actualmente.
         </div>
     {% endif %}
 </div>

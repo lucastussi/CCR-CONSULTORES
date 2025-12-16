@@ -14,8 +14,7 @@ from .models import (
     Document,
     Message,
 )
-from .forms import ProjectUpdateForm, MessageForm, MessageReplyForm
-
+from .forms import ProjectUpdateForm, MessageForm, MessageReplyForm, DocumentForm
 
 def home(request):
     """
@@ -354,3 +353,61 @@ def staff_reply_message(request, message_id):
         'form': form,
     }
     return render(request, 'sitio_web/staff_reply_message.html', context)
+
+# -------------------------------------------------------------
+#  Gestión de documentos de proyecto por parte del staff
+# -------------------------------------------------------------
+
+@login_required
+def staff_project_documents(request, project_id):
+    """
+    Vista para que ADMIN y WORKER vean los documentos de un proyecto
+    y accedan a la subida de nuevos documentos.
+    """
+    profile = getattr(request.user, 'profile', None)
+    if not profile or profile.role not in ['ADMIN', 'WORKER']:
+        return HttpResponseForbidden("No tienes permiso para ver los documentos de este proyecto.")
+
+    project = get_object_or_404(Project, id=project_id)
+    documents = Document.objects.filter(project=project).order_by('-uploaded_at')
+
+    context = {
+        'company_name': 'CCR CONSULTORES',
+        'page_title': f'Documentos del proyecto: {project.name}',
+        'project': project,
+        'documents': documents,
+    }
+    return render(request, 'sitio_web/staff_project_documents.html', context)
+
+
+@login_required
+def staff_upload_document(request, project_id):
+    """
+    Permite a ADMIN o WORKER subir un nuevo documento para un proyecto.
+    """
+    profile = getattr(request.user, 'profile', None)
+    if not profile or profile.role not in ['ADMIN', 'WORKER']:
+        return HttpResponseForbidden("No tienes permiso para subir documentos para este proyecto.")
+
+    project = get_object_or_404(Project, id=project_id)
+
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            doc = form.save(commit=False)
+            doc.project = project
+            doc.uploaded_by = request.user
+            doc.save()
+
+            messages.success(request, f'Documento "{doc.title}" subido correctamente.')
+            return redirect('staff_project_documents', project_id=project.id)
+    else:
+        form = DocumentForm()
+
+    context = {
+        'company_name': 'CCR CONSULTORES',
+        'page_title': f'Subir documento para: {project.name}',
+        'project': project,
+        'form': form,
+    }
+    return render(request, 'sitio_web/staff_upload_document.html', context)

@@ -26,4 +26,8 @@ urlpatterns = [
     # Vistas de staff (admin/worker)
     path('staff/inbox/', views.staff_inbox, name='staff_inbox'),
     path('staff/message/<int:message_id>/reply/', views.staff_reply_message, name='staff_reply_message'),
+
+    # Documentos de proyecto (staff)
+    path('staff/project/<int:project_id>/documents/', views.staff_project_documents, name='staff_project_documents'),
+    path('staff/project/<int:project_id>/documents/upload/', views.staff_upload_document, name='staff_upload_document'),
 ]
