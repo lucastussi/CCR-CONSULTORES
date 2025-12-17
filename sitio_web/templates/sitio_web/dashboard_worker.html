@@ -1,0 +1,88 @@
+{% extends 'sitio_web/base.html' %}
+
+{% block title %}Dashboard Trabajador - {{ company_name }}{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h1 class="mb-4">
+        <i class="bi bi-tools"></i>
+        Panel de Trabajador
+    </h1>
+
+    <div class="alert alert-info">
+        <strong>Bienvenido, {{ request.user.username }}!</strong>
+        <br>
+        Aquí puedes ver los proyectos asignados a ti y registrar avances.
+    </div>
+
+    <h2 class="mt-4 mb-3">
+        <i class="bi bi-briefcase"></i>
+        Mis proyectos asignados
+    </h2>
+
+    {% if projects %}
+        <div class="row">
+            {% for project in projects %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ project.name }}</h5>
+                            <p class="card-text text-muted">
+                                <small>
+                                    <i class="bi bi-geo-alt"></i> {{ project.city }}
+                                </small>
+                            </p>
+                            <p class="card-text">
+                                <strong>Cliente:</strong>
+                                {% if project.client %}
+                                    {{ project.client.username }}
+                                {% else %}
+                                    Sin asignar
+                                {% endif %}
+                            </p>
+                            <p class="card-text">
+                                <strong>Estado:</strong>
+                                <span class="badge 
+                                    {% if project.status == 'EN_PROGRESO' %}bg-primary
+                                    {% elif project.status == 'COMPLETADO' %}bg-success
+                                    {% elif project.status == 'PAUSADO' %}bg-warning
+                                    {% elif project.status == 'CANCELADO' %}bg-danger
+                                    {% else %}bg-secondary{% endif %}">
+                                    {{ project.get_status_display }}
+                                </span>
+                            </p>
+                            <div class="mb-3">
+                                <strong>Avance:</strong>
+                                <div class="progress" style="height: 25px;">
+                                    <div class="progress-bar" role="progressbar" 
+                                         style="width: {{ project.progress_percent }}%;" 
+                                         aria-valuenow="{{ project.progress_percent }}" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="100">
+                                        {{ project.progress_percent }}%
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-light">
+                            <a href="{% url 'worker_project_detail' project.id %}" class="btn btn-sm btn-primary">
+                                <i class="bi bi-eye"></i> Ver detalles
+                            </a>
+                            <a href="{% url 'worker_add_update' project.id %}" class="btn btn-sm btn-success">
+                                <i class="bi bi-plus-circle"></i> Registrar avance
+                            </a>
+                            <a href="{% url 'staff_project_documents' project.id %}" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-folder2-open"></i> Documentos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning">
+            No tienes proyectos asignados actualmente.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,124 @@
+<!-- sitio_web/templates/sitio_web/client_project_detail.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle Proyecto - {{ company_name }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f3f4f6; margin: 0; }
+        header { background-color: #0f766e; color: #ecfeff; padding: 1rem 2rem; }
+        header h1 { margin: 0; font-size: 1.4rem; }
+        nav a { color: #ecfeff; margin-right: 1rem; text-decoration: none; font-size: 0.9rem; }
+        main { padding: 2rem; max-width: 900px; margin: 0 auto; }
+        h2, h3 { color: #0f172a; }
+        .section {
+            background-color: #ffffff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+        }
+        .update, .document-item {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 0.5rem;
+            border-radius: 0.5rem;
+        }
+        .progress-bar {
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        .progress-bar-inner {
+            height: 10px;
+            background-color: #0ea5e9;
+        }
+        .document-item a {
+            color: #0f766e;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .document-item a:hover { text-decoration: underline; }
+        .btn {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.375rem;
+            text-decoration: none;
+            font-size: 0.85rem;
+            background-color: #0f766e;
+            color: #ffffff;
+        }
+        .btn:hover { background-color: #0d665e; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>{{ company_name }} - Detalle de proyecto (Cliente)</h1>
+        <nav>
+            <a href="{% url 'dashboard' %}">Volver a mis proyectos</a>
+            <a href="{% url 'logout' %}">Cerrar sesión</a>
+        </nav>
+    </header>
+    <main>
+        <section class="section">
+            <h2>{{ project.name }}</h2>
+            <p><strong>Ciudad:</strong> {{ project.city }}</p>
+            <p><strong>Dirección:</strong> {{ project.address }}</p>
+            <p><strong>Estado:</strong> {{ project.get_status_display }}</p>
+            <p><strong>Progreso actual:</strong> {{ project.progress_percent }} %</p>
+            <div class="progress-bar">
+                <div class="progress-bar-inner" style="width: {{ project.progress_percent }}%;"></div>
+            </div>
+            <p><strong>Descripción:</strong> {{ project.description }}</p>
+            <p><strong>Fecha estimada de finalización:</strong> {{ project.end_date_estimated|default:"No definida" }}</p>
+
+            <p style="margin-top: 1rem;">
+                <a href="{% url 'client_send_message' project.id %}" class="btn">
+                    Enviar mensaje a la empresa
+                </a>
+            </p>
+        </section>
+
+        <section class="section">
+            <h3>Historial de avances</h3>
+            {% if updates %}
+                {% for update in updates %}
+                    <div class="update">
+                        <p><strong>Fecha:</strong> {{ update.date }}</p>
+                        <p><strong>Progreso:</strong> {{ update.progress_percent }} %</p>
+                        {% if update.comment %}
+                            <p><strong>Comentario:</strong> {{ update.comment }}</p>
+                        {% endif %}
+                        {% if update.image %}
+                            <img src="{{ update.image.url }}" alt="Imagen de avance">
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No hay actualizaciones de avance registradas todavía.</p>
+            {% endif %}
+        </section>
+
+        <section class="section">
+            <h3>Documentos del proyecto</h3>
+            {% if documents %}
+                {% for document in documents %}
+                    <div class="document-item">
+                        <p><strong>Título:</strong> <a href="{{ document.file.url }}" target="_blank">{{ document.title }}</a></p>
+                        <p>Subido el: {{ document.uploaded_at|date:"d M Y" }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No hay documentos disponibles para este proyecto.</p>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{% extends 'sitio_web/base.html' %}
+
+{% block title %}Responder mensaje{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Responder mensaje</h1>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Mensaje original
+        </div>
+        <div class="card-body">
+            <p><strong>De:</strong> {{ original_message.sender.username }}</p>
+            <p><strong>Asunto:</strong> {{ original_message.subject }}</p>
+            <p><strong>Proyecto:</strong> {{ original_message.project.name }}</p>
+            <p><strong>Fecha:</strong> {{ original_message.sent_at|date:"d/m/Y H:i" }}</p>
+            <hr>
+            <p>{{ original_message.body }}</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            Tu respuesta
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ form.body.label_tag }}
+                    {{ form.body }}
+                    {% if form.body.errors %}
+                        <div class="text-danger">{{ form.body.errors }}</div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar respuesta</button>
+                <a href="{% url 'staff_inbox' %}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

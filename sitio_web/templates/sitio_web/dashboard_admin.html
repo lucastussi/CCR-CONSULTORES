@@ -1,0 +1,103 @@
+{% extends 'sitio_web/base.html' %}
+
+{% block title %}Dashboard Administrador - {{ company_name }}{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h1 class="mb-4">
+        <i class="bi bi-speedometer2"></i>
+        Panel de Administrador
+    </h1>
+
+    <div class="alert alert-info">
+        <strong>Bienvenido, {{ request.user.username }}!</strong>
+        <br>
+        Tienes acceso completo a todos los proyectos de la empresa.
+    </div>
+
+    <!-- Botones de acceso rápido -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="{% url 'admin_user_management' %}" class="btn btn-primary">
+                    <i class="bi bi-people-fill"></i> Gestión de usuarios
+                </a>
+                <a href="{% url 'staff_inbox' %}" class="btn btn-info">
+                    <i class="bi bi-envelope-fill"></i> Mensajes
+                </a>
+                <a href="/admin/" class="btn btn-dark" target="_blank">
+                    <i class="bi bi-gear-fill"></i> Panel Django Admin
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="mt-4 mb-3">
+        <i class="bi bi-building"></i>
+        Proyectos recientes
+    </h2>
+
+    {% if projects %}
+        <div class="row">
+            {% for project in projects %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ project.name }}</h5>
+                            <p class="card-text text-muted">
+                                <small>
+                                    <i class="bi bi-geo-alt"></i> {{ project.city }}
+                                </small>
+                            </p>
+                            <p class="card-text">
+                                <strong>Cliente:</strong>
+                                {% if project.client %}
+                                    {{ project.client.username }}
+                                {% else %}
+                                    <span class="text-muted">Sin asignar</span>
+                                {% endif %}
+                            </p>
+                            <p class="card-text">
+                                <strong>Estado:</strong>
+                                <span class="badge 
+                                    {% if project.status == 'EN_PROGRESO' %}bg-primary
+                                    {% elif project.status == 'COMPLETADO' %}bg-success
+                                    {% elif project.status == 'PAUSADO' %}bg-warning
+                                    {% elif project.status == 'CANCELADO' %}bg-danger
+                                    {% else %}bg-secondary{% endif %}">
+                                    {{ project.get_status_display }}
+                                </span>
+                            </p>
+                            <div class="mb-3">
+                                <strong>Avance:</strong>
+                                <div class="progress" style="height: 25px;">
+                                    <div class="progress-bar" role="progressbar" 
+                                         style="width: {{ project.progress_percent }}%;" 
+                                         aria-valuenow="{{ project.progress_percent }}" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="100">
+                                        {{ project.progress_percent }}%
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-light">
+                            <a href="{% url 'staff_project_documents' project.id %}" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-folder2-open"></i> Documentos
+                            </a>
+                            <a href="{% url 'staff_inbox' %}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-envelope"></i> Mensajes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle"></i>
+            No hay proyectos registrados en el sistema.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

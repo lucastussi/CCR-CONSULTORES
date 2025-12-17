@@ -1,0 +1,134 @@
+<!-- sitio_web/templates/sitio_web/login.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page_title }} - {{ company_name }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e5e7eb;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 4rem auto;
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin-top: 0;
+            text-align: center;
+            color: #111827;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 1rem;
+            color: #4b5563;
+            margin-top: 0.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #374151;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.5rem;
+            margin-top: 0.25rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.6rem;
+            margin-top: 1.5rem;
+            background-color: #2563eb;
+            color: #ffffff;
+            border: none;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .error {
+            color: #b91c1c;
+            background-color: #fee2e2;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .link-home,
+        .link-register {
+            display: block;
+            text-align: center;
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+
+        .link-home a,
+        .link-register a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .link-home a:hover,
+        .link-register a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ company_name }}</h1>
+        <h2>{{ page_title }}</h2>
+
+        {% if error_message %}
+            <div class="error">
+                {{ error_message }}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <label for="id_username">Usuario</label>
+            <input type="text" name="username" id="id_username" required>
+
+            <label for="id_password">Contraseña</label>
+            <input type="password" name="password" id="id_password" required>
+
+            <button type="submit">Ingresar</button>
+        </form>
+
+        <div class="link-register">
+            ¿No tienes cuenta?
+            <a href="{% url 'register' %}">Regístrate aquí</a>
+        </div>
+
+        <div class="link-home">
+            <a href="{% url 'home' %}">Volver al inicio</a>
+        </div>
+    </div>
+</body>
+</html>

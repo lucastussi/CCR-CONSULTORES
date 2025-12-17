@@ -1,0 +1,178 @@
+<!-- sitio_web/templates/sitio_web/register.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page_title }} - {{ company_name }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e5e7eb;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 4rem auto;
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin-top: 0;
+            text-align: center;
+            color: #111827;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 1rem;
+            color: #4b5563;
+            margin-top: 0.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #374151;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.5rem;
+            margin-top: 0.25rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.6rem;
+            margin-top: 1.5rem;
+            background-color: #16a34a;
+            color: #ffffff;
+            border: none;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #15803d;
+        }
+
+        .error {
+            color: #b91c1c;
+            background-color: #fee2e2;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .success {
+            color: #065f46;
+            background-color: #d1fae5;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .link-login {
+            display: block;
+            text-align: center;
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+
+        .link-login a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .link-login a:hover {
+            text-decoration: underline;
+        }
+
+        .helptext {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ company_name }}</h1>
+        <h2>{{ page_title }}</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if form.non_field_errors %}
+            <div class="error">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <label for="id_username">Nombre de usuario</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                {% for error in form.username.errors %}
+                    <div class="error">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <label for="id_email">Correo electrónico</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                {% for error in form.email.errors %}
+                    <div class="error">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <label for="id_password1">Contraseña</label>
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+                {% for error in form.password1.errors %}
+                    <div class="error">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <label for="id_password2">Confirmar contraseña</label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+                {% for error in form.password2.errors %}
+                    <div class="error">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <button type="submit">Crear cuenta</button>
+        </form>
+
+        <div class="link-login">
+            ¿Ya tienes cuenta?
+            <a href="{% url 'login' %}">Inicia sesión aquí</a>
+        </div>
+    </div>
+</body>
+</html>
